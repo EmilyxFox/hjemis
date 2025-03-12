@@ -1,0 +1,9 @@
+{
+    "name": "Hjem-IS",
+    "content_in_root": false,
+    "zip_release": false,
+    "hide_default_branch": false,
+    "country": ["DK"],
+    "homeassistant": "2025.3.2",
+    "hacs": "2.0.5"
+}
