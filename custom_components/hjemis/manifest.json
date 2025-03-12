@@ -1,11 +1,8 @@
 {
     "domain": "hjemis",
     "name": "Hjem-IS",
-    "codeowners": [
-        "@EmilyxFox"
-    ],
+    "codeowners": ["@EmilyxFox"],
     "config_flow": true,
-    "dependencies": [],
     "documentation": "https://github.com/emilyxfox/hjemis-integration",
     "iot_class": "cloud_polling",
     "issue_tracker": "https://github.com/emilyxfox/hjemis-integration/issues",
