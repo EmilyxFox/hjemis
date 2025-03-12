@@ -4,16 +4,16 @@ from .const import DOMAIN
 async def async_setup_entry(hass, config_entry, async_add_entries):
     """Set up the sensor platform for HjemIS"""
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
-    async_add_entries([HjemISSensor(coordinator)], True)
+    async_add_entries([HjemISSensor(coordinator, config_entry.entry_id)], True)
 
 class HjemISSensor(SensorEntity):
     """Representation of a sensor for the next HjemIS visit."""
 
-    def __init__(self, coordinator):
+    def __init__(self, coordinator, config_entry_id):
         """Initialise the sensor."""
         self.coordinator = coordinator
         self._attr_name = "Next HjemIS visit"
-        self._attr_unique_id = "hjemis_next_visit"
+        self._attr_unique_id = f"hjemis_next_visit_{config_entry_id}"
         self._attr_icon = "mdi:ice-cream"
         self._attr_device_class = SensorDeviceClass.TIMESTAMP
 
