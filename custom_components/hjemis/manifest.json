@@ -2,13 +2,15 @@
     "domain": "hjemis",
     "name": "Hjem-IS",
     "version": "0.1.0",
-    "documentation": "https://example.com/",
+    "documentation": "https://github.com/emilyxfox/hjemis-integration",
+    "issue_tracker": "https://github.com/emilyxfox/hjemis-integration/issues",
+    "iot_class": "cloud_polling",
     "config_flow": true,
     "requirements": [
         "aiohttp"
     ],
     "dependencies": [],
     "codeowners": [
-        "me"
+        "@EmilyxFox"
     ]
 }
