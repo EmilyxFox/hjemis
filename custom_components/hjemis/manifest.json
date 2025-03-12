@@ -1,0 +1,14 @@
+{
+    "domain": "hjemis",
+    "name": "Hjem-IS",
+    "version": "0.1.0",
+    "documentation": "https://example.com/",
+    "config_flow": true,
+    "requirements": [
+        "aiohttp"
+    ],
+    "dependencies": [],
+    "codeowners": [
+        "me"
+    ]
+}
