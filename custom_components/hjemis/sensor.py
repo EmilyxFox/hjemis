@@ -1,12 +1,8 @@
 import logging
 from datetime import datetime
-import pytz
 
-from homeassistant.util import dt as dt_util
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass
 from .const import DOMAIN
-
-_LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass, config_entry, async_add_entries):
     """Set up the sensor platform for HjemIS"""
