@@ -2,6 +2,5 @@
     "name": "hjemis",
     "country": ["DK"],
     "hacs": "2.0.5",
-    "homeassistant": "2025.3.2",
-    "content_in_root": false
+    "homeassistant": "2025.3.2"
 }
