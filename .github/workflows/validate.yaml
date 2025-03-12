@@ -14,7 +14,11 @@ jobs:
     name: HACS Action
     runs-on: "ubuntu-latest"
     steps:
+      - name: "Checkout the repository"
+        uses: "actions/checkout@v4.2.2"
+
       - name: HACS Action
         uses: "hacs/action@main"
         with:
           category: "integration"
+          ignore: "brands"
