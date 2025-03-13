@@ -18,15 +18,14 @@ def is_in_norway(lat, lon):
 
 async def async_fetch_data(session, lat, lon):
     """Fetch data from the external API using provided coordinates."""
-    if is_in_norway(lat, lon,):
+    if is_in_norway(lat, lon):
         api_url = API_URL_NO
         country = "Norway"
     else:
         api_url = API_URL_DK
         country = "Denmark"
-
-
-    _LOGGER.debug("Fetching data from HjemIS API with coordinates: lat=%s, lon=%s", lat, lon)
+        
+    _LOGGER.debug("Fetching data from API (%s) with coordinates: lat=%s, lon=%s", country, lat, lon)
     params = {"coordinates[lat]": lat, "coordinates[lng]": lon}
     async with session.get(api_url, params=params) as response:
         if response.status != 200:
@@ -42,22 +41,26 @@ class HjemISDataUpdateCoordinator(DataUpdateCoordinator):
         """Initialize the coordinator."""
         self.lat = lat
         self.lon = lon
-        _LOGGER.debug("Initializing HjemIS coordinator with lat=%s, lon=%s", lat, lon)
+        _LOGGER.debug("Initializing coordinator with lat=%s, lon=%s", lat, lon)
         super().__init__(
             hass,
             _LOGGER,
-            name="HjemIS Data Collector",
+            name="HjemIS/Fråst Data Collector",
             update_interval=timedelta(hours=1),
         )
 
     async def _async_update_data(self):
         """Fetch data from the API."""
-        _LOGGER.debug("Running update for HjemIS coordinator")
+        _LOGGER.debug("Running update for coordinator")
         try:
             async with aiohttp.ClientSession() as session:
-                data = await async_fetch_data(session, self.lat, self.lon)
-                _LOGGER.debug("HjemIS update successful, data length: %s", len(data) if isinstance(data, list) else "not a list")
-                return data
+                result = await async_fetch_data(session, self.lat, self.lon)
+                data = result["data"]
+                country = result["country"]
+                _LOGGER.debug("Update successful for %s, data length: %s", 
+                             country, 
+                             len(data) if isinstance(data, list) else "not a list")
+                return {"data": data, "country": country}
         except Exception as err:
-            _LOGGER.exception("Unexpected error occurred during HjemIS update: %s", err)
-            raise UpdateFailed(f"Error updating HjemIS data: {err}")
+            _LOGGER.exception("Unexpected error occurred during update: %s", err)
+            raise UpdateFailed(f"Error updating data: {err}")

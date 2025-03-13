@@ -22,16 +22,22 @@ class HjemISSensor(SensorEntity):
             self.coordinator.async_add_listener(self.async_write_ha_state)
         )
 
+        await self._update_name()
+
     async def _update_name(self):
         """Update the sensor name based on the country."""
         if self.coordinator.data and "country" in self.coordinator.data:
             country = self.coordinator.data["country"]
             if country == "Norway":
                 self._attr_name = "Next Fråst visit"
-                self._attr_unique_id = f"fraast_next_visit_{self._entry_id}"
+                self._attr_unique_id = f"frost_next_visit_{self._entry_id}"
             else:
                 self._attr_name = "Next HjemIS visit"
                 self._attr_unique_id = f"hjemis_next_visit_{self._entry_id}"
+        else:
+            # Default name until we know the country
+            self._attr_name = "Next ice cream visit"
+            self._attr_unique_id = f"icecream_next_visit_{self._entry_id}"
 
     @property
     def available(self):
@@ -41,7 +47,10 @@ class HjemISSensor(SensorEntity):
     @property
     def state(self):
         """Return the raw timestamp as the state."""
-        data = self.coordinator.data
+        if not self.coordinator.data or "data" not in self.coordinator.data:
+            return None
+            
+        data = self.coordinator.data["data"]
         if data and isinstance(data, list) and len(data) > 0:
             next_event = data[0]
             return next_event.get("google_estimate_time", None)
@@ -50,11 +59,18 @@ class HjemISSensor(SensorEntity):
     @property
     def extra_state_attributes(self):
         """Return additional attributes."""
-        data = self.coordinator.data
+        if not self.coordinator.data or "data" not in self.coordinator.data:
+            return {}
+            
+        data = self.coordinator.data["data"]
+        country = self.coordinator.data.get("country", "unknown")
+        
         if data and isinstance(data, list) and len(data) > 0:
             next_event = data[0]
             return {
                 "address": next_event.get("address", "unknown"),
-                "distance": next_event.get("distance", "unknown")
+                "distance": next_event.get("distance", "unknown"),
+                "country": country,
+                "brand": "Fråst" if country == "Norway" else "HjemIS"
             }
-        return {}
+        return {"country": country, "brand": "Fråst" if country == "Norway" else "HjemIS"}
