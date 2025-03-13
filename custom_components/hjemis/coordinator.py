@@ -3,21 +3,37 @@ import aiohttp
 from datetime import timedelta
 
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from .const import API_URL_DK, API_URL_NO
 
 _LOGGER = logging.getLogger(__name__)
 
-API_URL = "https://sms.hjem-is.dk/dk.json"
+def is_in_norway(lat, lon):
+    """Determine if coordinates are in Norway.
+    
+    This check seems really stupid, but its sufficient for now.
+    The function still takes in both just in case the check needs to be
+    complicated in the future.
+    """
+    return lat > 57.9
 
 async def async_fetch_data(session, lat, lon):
     """Fetch data from the external API using provided coordinates."""
+    if is_in_norway(lat, lon,):
+        api_url = API_URL_NO
+        country = "Norway"
+    else:
+        api_url = API_URL_DK
+        country = "Denmark"
+
+
     _LOGGER.debug("Fetching data from HjemIS API with coordinates: lat=%s, lon=%s", lat, lon)
     params = {"coordinates[lat]": lat, "coordinates[lng]": lon}
-    async with session.get(API_URL, params=params) as response:
+    async with session.get(api_url, params=params) as response:
         if response.status != 200:
             _LOGGER.error("Error fetching data: %s", response.status)
             raise UpdateFailed(f"Error fetching data: {response.status}")
         json = await response.json()
-        return json
+        return {"data": json, "country": country}
 
 class HjemISDataUpdateCoordinator(DataUpdateCoordinator):
     """Coordinator to fetch data from the HjemIS API."""

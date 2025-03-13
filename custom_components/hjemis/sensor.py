@@ -12,8 +12,7 @@ class HjemISSensor(SensorEntity):
     def __init__(self, coordinator, config_entry_id):
         """Initialise the sensor."""
         self.coordinator = coordinator
-        self._attr_name = "Next HjemIS visit"
-        self._attr_unique_id = f"hjemis_next_visit_{config_entry_id}"
+        self._entry_id = config_entry_id
         self._attr_icon = "mdi:ice-cream"
         self._attr_device_class = SensorDeviceClass.TIMESTAMP
 
@@ -22,6 +21,17 @@ class HjemISSensor(SensorEntity):
         self.async_on_remove(
             self.coordinator.async_add_listener(self.async_write_ha_state)
         )
+
+    async def _update_name(self):
+        """Update the sensor name based on the country."""
+        if self.coordinator.data and "country" in self.coordinator.data:
+            country = self.coordinator.data["country"]
+            if country == "Norway":
+                self._attr_name = "Next Fråst visit"
+                self._attr_unique_id = f"fraast_next_visit_{self._entry_id}"
+            else:
+                self._attr_name = "Next HjemIS visit"
+                self._attr_unique_id = f"hjemis_next_visit_{self._entry_id}"
 
     @property
     def available(self):
