@@ -1,6 +1,8 @@
 # Hjem-IS
 
-Hjem-IS is the company that runs ice-cream vans in Denmark (and Norway, although this integration only supports Denmark so far). This integration uses their API to look fetch upcoming ice-cream van visits near you.
+Hjem-IS & Fråst are the companies that run ice-cream vans in Denmark and Norway. This integration uses their APIs to look fetch upcoming ice-cream van visits near you.
+
+It will automatically pick the right API based on your location.
 
 ## Sensor
 
