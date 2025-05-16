@@ -8,7 +8,7 @@ from .const import API_URL_DK, API_URL_NO # Assuming these are defined in your c
 
 _LOGGER = logging.getLogger(__name__)
 
-INTEGRATION_VERSION = "0.2.1" # Or dynamically get this if possible
+INTEGRATION_VERSION = "0.3.0" # Or dynamically get this if possible
 USER_AGENT_STRING = f"HomeAssistant-HjemIS&Fråst/{INTEGRATION_VERSION} (+https://github.com/EmilyxFox/hjemis)"
 
 def is_in_norway(lat, lon):
